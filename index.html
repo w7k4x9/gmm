@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그믐</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3Cmask%20id='m'%3E%3Crect%20width='100'%20height='100'%20fill='white'/%3E%3Ccircle%20cx='64'%20cy='40'%20r='42'%20fill='black'/%3E%3C/mask%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='52'%20r='40'%20fill='%23000000'%20mask='url(%23m)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#08080c;          /* 먹빛 바닥 */
+  --ink2:#0e0e15;
+  --paper:#cdc7bb;        /* 빛바랜 한지 글자 */
+  --paper-dim:#86817a;
+  --star:#ece7da;         /* 별빛 */
+  --wol:#9aa0ad;          /* 현월 회청 */
+  --gye:#b24038;          /* 이겸 사위는 빨강 */
+  --rok:#5d7484;          /* 청록 현상액 청회 */
+  --line:rgba(205,199,187,.13);
+  --line2:rgba(205,199,187,.26);
+  --serif:'Gowun Batang',serif;
+  --sans:'IBM Plex Sans KR',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--ink);color:var(--paper);overflow:hidden;font-family:var(--sans);cursor:none}
+::selection{background:rgba(236,231,218,.16)}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:none}
+@media (hover:none){html,body,button{cursor:auto}}
+
+/* ── 커서 ── */
+#cur{position:fixed;width:5px;height:5px;border-radius:50%;background:var(--star);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}
+#ring{position:fixed;width:24px;height:24px;border-radius:50%;border:1px solid rgba(236,231,218,.35);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s}
+body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
+@media (hover:none){#cur,#ring{display:none}}
+
+/* ── 배경 ── */
+#sky{position:fixed;inset:0;z-index:0}
+#grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23n)'/%3E%3C/svg%3E")}
+#vig{position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at 50% 40%,transparent 36%,rgba(2,2,6,.82) 100%)}
+.moon{position:fixed;top:9vh;right:11vw;width:118px;height:118px;z-index:3;pointer-events:none;opacity:.8;filter:drop-shadow(0 0 26px rgba(236,231,218,.09));transition:opacity 1.6s}
+.moon svg{width:100%;height:100%}
+
+/* ── 화면 ── */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 1.3s ease;z-index:10}
+.screen.on{opacity:1;pointer-events:auto}
+
+/* ── GATE ── */
+#gate{z-index:30}
+.g-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.5em;text-indent:.5em;color:var(--paper-dim);margin-bottom:30px}
+.g-title{font-family:var(--serif);font-weight:700;font-size:clamp(86px,17vw,176px);letter-spacing:.16em;text-indent:.16em;line-height:.9;color:var(--star);text-shadow:0 0 70px rgba(236,231,218,.13)}
+.g-sub{font-family:var(--serif);font-size:clamp(13px,2vw,17px);letter-spacing:.34em;text-indent:.34em;color:var(--paper-dim);margin-top:30px}
+.g-line{width:1px;height:60px;background:linear-gradient(var(--line2),transparent);margin:38px 0 28px}
+.g-enter{font-family:var(--mono);font-size:12px;letter-spacing:.38em;text-indent:.38em;color:var(--paper-dim);border:1px solid var(--line);padding:14px 38px;border-radius:2px;animation:breathe 2.8s ease-in-out infinite;transition:border-color .3s,color .3s}
+.g-enter:hover{border-color:var(--line2);color:var(--star)}
+@keyframes breathe{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* ── 루트 선택 ── */
+#routes{z-index:24;justify-content:flex-start;padding-top:9vh;overflow-y:auto}
+#routes::-webkit-scrollbar{width:4px}#routes::-webkit-scrollbar-thumb{background:var(--line2)}
+.r-head{text-align:center;margin-bottom:clamp(28px,6vh,56px);padding:0 24px}
+.r-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.46em;text-indent:.46em;color:var(--paper-dim)}
+.r-h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4.4vw,40px);letter-spacing:.06em;color:var(--star);margin-top:16px}
+.r-note{font-family:var(--serif);font-size:clamp(12.5px,1.7vw,15px);color:var(--paper-dim);margin-top:14px;line-height:1.9;word-break:keep-all;max-width:560px;margin-left:auto;margin-right:auto}
+.r-grid{display:grid;grid-template-columns:repeat(3,minmax(0,300px));gap:18px;padding:0 24px 60px;width:100%;justify-content:center}
+.route{position:relative;text-align:left;border:1px solid var(--line);border-radius:3px;padding:30px 26px 26px;background:linear-gradient(rgba(16,16,24,.42),rgba(8,8,12,.86));overflow:hidden;transition:border-color .4s,transform .4s,box-shadow .4s;min-height:330px;display:flex;flex-direction:column}
+.route:hover{border-color:var(--acc);transform:translateY(-4px);box-shadow:0 22px 48px -22px var(--acc)}
+.route::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% -10%,var(--accSoft),transparent 60%);opacity:0;transition:opacity .4s}
+.route:hover::before{opacity:1}
+.route .num{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--acc);margin-bottom:auto}
+.route .rt{font-family:var(--serif);font-weight:700;font-size:30px;letter-spacing:.1em;color:var(--star);margin:20px 0 4px}
+.route .who{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--paper-dim);margin-bottom:18px}
+.route .desc{font-family:var(--serif);font-size:13.5px;line-height:1.95;color:var(--paper);word-break:keep-all;flex:1}
+.route .go{margin-top:20px;font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;color:var(--acc);display:flex;align-items:center;gap:8px;opacity:.7;transition:opacity .3s}
+.route:hover .go{opacity:1}
+.route .go .arrow{transition:transform .3s}
+.route:hover .go .arrow{transform:translateX(5px)}
+#r1{--acc:var(--wol);--accSoft:rgba(154,160,173,.12)}
+#r2{--acc:var(--gye);--accSoft:rgba(178,64,56,.12)}
+#r3{--acc:var(--paper-dim);--accSoft:rgba(134,129,122,.1)}
+.r-back{margin:0 auto 50px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--paper-dim);border:1px solid var(--line);padding:9px 20px;border-radius:2px;transition:.3s}
+.r-back:hover{color:var(--star);border-color:var(--line2)}
+
+/* ── 미연시(VN) ── */
+#vn{z-index:26;justify-content:flex-end}
+#vnStage{position:absolute;inset:0;overflow:hidden}
+#vnSil{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(28px);width:min(400px,66vw);opacity:0;transition:opacity 2s ease,transform 2s ease;pointer-events:none}
+#vnSil.show{opacity:.9;transform:translateX(-50%) translateY(0)}
+#vnFlash{position:absolute;inset:0;background:#dcd6ca;opacity:0;pointer-events:none;transition:opacity .85s}
+#vnBox{position:relative;width:min(840px,92vw);margin:0 auto 6vh;z-index:5;background:linear-gradient(rgba(8,8,12,.86),rgba(8,8,12,.96));border:1px solid var(--line);border-radius:3px;padding:26px 34px 30px;box-shadow:0 18px 56px rgba(0,0,0,.6);transition:opacity .6s}
+#vnName{font-family:var(--serif);font-weight:700;font-size:15px;letter-spacing:.26em;min-height:22px;margin-bottom:12px}
+#vnName .nm-wol{color:var(--wol)} #vnName .nm-gye{color:var(--gye)} #vnName .nm-rok{color:var(--rok)}
+#vnName .nm-sys{color:var(--paper-dim);font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.4em}
+#vnLine{font-family:var(--serif);font-size:clamp(15px,2vw,18.5px);line-height:2.05;color:var(--paper);min-height:80px;word-break:keep-all}
+#vnLine.dlg{color:var(--star)}
+#vnNext{position:absolute;right:24px;bottom:14px;font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--paper-dim);opacity:0;transition:opacity .4s;animation:breathe 2s infinite}
+#vnNext.show{opacity:1}
+#vnSkip{position:fixed;top:24px;right:28px;z-index:40;font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--paper-dim);border:1px solid var(--line);padding:9px 18px;border-radius:2px;background:rgba(8,8,12,.6);transition:.3s;display:none}
+#vnSkip:hover{color:var(--star);border-color:var(--line2)}
+#vnHint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:40;font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:rgba(134,129,122,.5);display:none}
+
+/* ── 타이틀 컷 ── */
+#title{z-index:28}
+.t-num{font-family:var(--mono);font-size:12px;letter-spacing:.5em;text-indent:.5em;color:var(--paper-dim);opacity:0;transition:opacity 1.4s .3s}
+.t-h{font-family:var(--serif);font-weight:700;font-size:clamp(72px,15vw,150px);letter-spacing:.14em;text-indent:.14em;color:var(--star);line-height:1;opacity:0;transform:scale(1.05);transition:opacity 2s,transform 2.4s;text-shadow:0 0 72px rgba(236,231,218,.14);margin:18px 0}
+.t-sub{font-family:var(--serif);font-size:clamp(13px,1.8vw,16px);letter-spacing:.4em;text-indent:.4em;color:var(--paper-dim);opacity:0;transition:opacity 1.6s 1s}
+#title.lit .t-num,#title.lit .t-sub{opacity:1}
+#title.lit .t-h{opacity:1;transform:scale(1)}
+
+/* ── 로비 ── */
+#lobby{z-index:20;display:block;justify-content:flex-start;overflow-y:auto;padding:0 0 80px}
+#lobby::-webkit-scrollbar{width:4px}#lobby::-webkit-scrollbar-thumb{background:var(--line2)}
+.lb-head{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:22px clamp(20px,6vw,64px);background:linear-gradient(rgba(8,8,12,.96),rgba(8,8,12,.8) 70%,transparent);backdrop-filter:blur(6px)}
+.lb-logo{font-family:var(--serif);font-weight:700;font-size:24px;letter-spacing:.26em;color:var(--star)}
+.lb-logo small{font-family:var(--mono);font-size:9.5px;letter-spacing:.3em;color:var(--paper-dim);margin-left:12px}
+.lb-tabs{display:flex;gap:6px}
+.lb-tab{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--paper-dim);padding:10px 18px;border:1px solid transparent;border-radius:2px;transition:.3s}
+.lb-tab:hover{color:var(--paper)}
+.lb-tab.act{color:var(--star);border-color:var(--line2)}
+.lb-replay{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--paper-dim);border:1px solid var(--line);padding:9px 15px;border-radius:2px;transition:.3s}
+.lb-replay:hover{color:var(--star);border-color:var(--line2)}
+.panel{display:none;max-width:1080px;margin:32px auto 0;padding:0 clamp(20px,6vw,64px);animation:fade .7s ease}
+.panel.act{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.sec-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.46em;text-indent:.46em;color:var(--paper-dim);margin-bottom:12px}
+.sec-h{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.8vw,36px);letter-spacing:.06em;color:var(--star);margin-bottom:34px;word-break:keep-all}
+
+/* 인물 카드 */
+.chars{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px}
+.card{position:relative;border:1px solid var(--line);border-radius:3px;background:linear-gradient(rgba(16,16,24,.5),rgba(8,8,12,.86));overflow:hidden;transition:border-color .4s,transform .4s}
+.card:hover{border-color:var(--acc);transform:translateY(-3px)}
+/* 초상 자리: 실루엣 SVG가 들어가는 액자 */
+.portrait{position:relative;height:230px;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(120% 100% at 50% 0%,var(--accSoft),transparent 70%)}
+.portrait svg{width:auto;height:200px;opacity:.92}
+.portrait .ph-note{position:absolute;top:12px;left:14px;font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;color:var(--paper-dim);opacity:.6}
+.card .body{padding:24px 24px 26px}
+.card h3{font-family:var(--serif);font-weight:700;font-size:27px;letter-spacing:.14em;color:var(--star);display:flex;align-items:baseline;gap:12px}
+.card h3 .tag{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--acc)}
+.card .role{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--paper-dim);margin:7px 0 16px}
+.card .quote{font-family:var(--serif);font-size:13.5px;line-height:1.95;color:var(--paper);border-left:2px solid var(--acc);padding-left:13px;margin-bottom:18px;word-break:keep-all;min-height:78px}
+.card .lede{font-family:var(--serif);font-size:13px;line-height:1.95;color:var(--paper-dim);word-break:keep-all}
+.card .lede b{color:var(--paper);font-weight:500}
+#c-wol{--acc:var(--wol);--accSoft:rgba(154,160,173,.14)}
+#c-gye{--acc:var(--gye);--accSoft:rgba(178,64,56,.14)}
+#c-rok{--acc:var(--rok);--accSoft:rgba(93,116,132,.14)}
+
+/* 세계관 */
+.lore{display:grid;gap:16px}
+.lore-item{border:1px solid var(--line);border-radius:3px;padding:26px 30px;background:linear-gradient(rgba(16,16,24,.4),rgba(8,8,12,.82))}
+.lore-item h4{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:.1em;color:var(--star);margin-bottom:11px;display:flex;align-items:baseline;gap:13px}
+.lore-item h4 em{font-family:var(--mono);font-style:normal;font-size:10px;letter-spacing:.26em;color:var(--paper-dim)}
+.lore-item p{font-family:var(--serif);font-size:13.5px;line-height:2.05;color:var(--paper);word-break:keep-all}
+.lore-item p b{color:var(--star);font-weight:500}
+
+@media(max-width:780px){
+  .r-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}
+  .lb-head{flex-wrap:wrap;gap:12px}.lb-tabs{order:3;width:100%}
+  .moon{width:80px;height:80px}
+  #vnBox{padding:20px 20px 26px}
+}
+/* ── 음악 토글 ── */
+#audioToggle{position:fixed;top:24px;left:28px;z-index:60;font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--paper-dim);border:1px solid var(--line);padding:9px 16px;border-radius:2px;background:rgba(8,8,12,.6);display:flex;align-items:center;gap:9px;transition:.3s}
+#audioToggle:hover{color:var(--star);border-color:var(--line2)}
+#audioToggle .dot{width:6px;height:6px;border-radius:50%;background:var(--paper-dim);transition:.3s}
+#audioToggle.on .dot{background:#6fae8a;box-shadow:0 0 8px rgba(111,174,138,.8)}
+@media(max-width:780px){#audioToggle{top:auto;bottom:16px;left:14px}}
+</style>
+</head>
+<body>
+<audio id="bgm" loop preload="auto"></audio>
+<button id="audioToggle" class="on hovt"><span class="dot"></span><span class="lbl">BGM ON</span></button>
+<div id="cur"></div><div id="ring"></div>
+<canvas id="sky"></canvas><div id="grain"></div><div id="vig"></div>
+
+<div class="moon">
+  <svg viewBox="0 0 100 100"><defs><mask id="wane"><rect width="100" height="100" fill="#fff"/><circle cx="42" cy="46" r="38" fill="#000"/></mask></defs><circle cx="50" cy="50" r="38" fill="#ece7da" mask="url(#wane)" opacity=".9"/></svg>
+</div>
+
+<!-- GATE -->
+<section class="screen on" id="gate">
+  <div class="g-eyebrow">해가 사라진 밤</div>
+  <h1 class="g-title">그믐</h1>
+  <div class="g-line"></div>
+  <button class="g-enter hovt" id="enterBtn">들어가기</button>
+  <div class="g-sub" style="margin-top:34px;font-size:11px;letter-spacing:.24em;color:rgba(134,129,122,.6)">CLICK · ENTER 로 진행</div>
+</section>
+
+<!-- 루트 선택 -->
+<section class="screen" id="routes">
+  <div class="r-head">
+    <div class="r-eyebrow">어디에서 시작할까</div>
+    <div class="r-h1">밤은 세 갈래로 열린다</div>
+    <p class="r-note">당신이 누구인지는 묻지 않는다. 어느 밤, 어느 골목에서 이야기를 시작할지만 고르면 된다. 나머지는 당신이 적어 내려간다.</p>
+  </div>
+  <div class="r-grid">
+    <button class="route hovt" id="r1" data-route="hill">
+      <div class="num">루트 1</div>
+      <div class="rt">언덕</div>
+      <div class="who">별이 가장 밝은 산책로 · 현월</div>
+      <p class="desc">가로등이 끊긴 언덕 위, 별이 강처럼 쏟아지는 밤. 무심코 흘린 한마디 끝에 등 뒤의 어둠이 천천히 출렁이고, 돌아본 자리에는 검은 두루마기를 걸친 낯선 이가 당신을 들여다보고 있다.</p>
+      <div class="go">이 밤으로 들어가기 <span class="arrow">→</span></div>
+    </button>
+    <button class="route hovt" id="r2" data-route="bar">
+      <div class="num">루트 2</div>
+      <div class="rt">심야</div>
+      <div class="who">비 내리는 뒷골목 · 이겸</div>
+      <p class="desc">빗줄기를 피해 뛰어든 지하, '영업 끝'이라 써 붙은 문 너머로 갈색 머리의 사장이 잔을 닦다 고개를 든다. 환영받지 못한 손님으로 밤이 시작된다.</p>
+      <div class="go">이 밤으로 들어가기 <span class="arrow">→</span></div>
+    </button>
+    <button class="route hovt" id="r3" data-route="free">
+      <div class="num">루트 3</div>
+      <div class="rt">설계</div>
+      <div class="who">당신이 정하는 첫 장면</div>
+      <p class="desc">장소도 시각도 날씨도, 누구와 마주칠지도 첫 문장으로 직접 적는다. 정하지 않은 것은 밤이 알아서 풍경으로 채워 준다.</p>
+      <div class="go">직접 적기 <span class="arrow">→</span></div>
+    </button>
+  </div>
+  <button class="r-back hovt" id="routeBack">← 처음으로</button>
+</section>
+
+<!-- 미연시 -->
+<section class="screen" id="vn">
+  <div id="vnStage">
+    <svg id="vnSil" viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="silg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14141d"/><stop offset="1" stop-color="#08080c"/></linearGradient></defs>
+      <path d="M200 64 q-24 0 -36 24 q-8 16 -6 36 q-56 14 -82 66 q-28 56 -38 312 l324 0 q-10 -256 -38 -312 q-26 -52 -82 -66 q2 -20 -6 -36 q-12 -24 -36 -24 z" fill="url(#silg)" stroke="rgba(205,199,187,.12)" stroke-width="1"/>
+      <path d="M178 128 l22 32 l22 -32" fill="none" stroke="rgba(236,231,218,.7)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M160 92 q-16 86 -8 230" fill="none" stroke="rgba(236,231,218,.34)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M178 96 q8 5 15 0 M210 96 q8 5 15 0" fill="none" stroke="rgba(154,160,173,.95)" stroke-width="3.4" stroke-linecap="round"/>
+    </svg>
+    <div id="vnFlash"></div>
+  </div>
+  <div id="vnBox" class="hovt">
+    <div id="vnName"></div>
+    <div id="vnLine"></div>
+    <div id="vnNext">▼</div>
+  </div>
+</section>
+<button id="vnSkip" class="hovt">건너뛰기 ≫</button>
+<div id="vnHint">CLICK · ENTER 로 진행</div>
+
+<!-- 타이틀 컷 -->
+<section class="screen" id="title">
+  <div class="t-num">어느 밤의 시작</div>
+  <h1 class="t-h">그믐</h1>
+  <div class="t-sub">해가 뜨지 않는 밤 · 당신의 이야기가 시작된다</div>
+</section>
+
+<!-- 로비 -->
+<section class="screen" id="lobby">
+  <div class="lb-head">
+    <div class="lb-logo">그믐<small>GEUMEUM</small></div>
+    <nav class="lb-tabs">
+      <button class="lb-tab hovt act" data-p="p-char">인물</button>
+      <button class="lb-tab hovt" data-p="p-world">세계관</button>
+    </nav>
+    <button class="lb-replay hovt" id="replayBtn">다시 고르기</button>
+  </div>
+
+  <!-- 인물 -->
+  <div class="panel act" id="p-char">
+    <div class="sec-eyebrow">세 사람</div>
+    <h2 class="sec-h">같은 밤에 묶인 세 사람</h2>
+    <div class="chars">
+
+      <article class="card" id="c-wol">
+        <div class="portrait">
+          <span class="ph-note">캐릭터 일러스트 자리</span>
+          <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1a24"/><stop offset="1" stop-color="#0a0a10"/></linearGradient></defs>
+            <path d="M90 20 q-18 0 -27 18 q-6 12 -4 27 q-40 10 -58 50 q-18 36 -22 85 l222 0 q-4 -49 -22 -85 q-18 -40 -58 -50 q2 -15 -4 -27 q-9 -18 -27 -18z" fill="url(#pw)" stroke="rgba(154,160,173,.3)" stroke-width="1"/>
+            <path d="M76 72 l14 22 l14 -22" fill="none" stroke="rgba(236,231,218,.7)" stroke-width="3.4" stroke-linecap="round"/>
+            <path d="M64 44 q-10 60 -5 150" fill="none" stroke="rgba(236,231,218,.45)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M70 50 q8 4 14 0 M96 50 q8 4 14 0" fill="none" stroke="rgba(154,160,173,1)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>현월 <span class="tag">언덕에서</span></h3>
+          <div class="role">189cm · 허리께 흑발 반묶음 · 회색 눈</div>
+          <p class="quote">"방금 그 말, 한 번만 더 해 주련? 색시야."</p>
+          <p class="lede">별이 가장 밝은 언덕에 늘 먼저 와 있는 사람. 예스러운 말씨가 밴 반말로 천진하게 웃고, 칭찬 한마디에 한없이 약해진다. 회색 눈이 한번 당신에게 머물면 <b>좀처럼 다른 곳을 보지 않는다</b>. 다정한 듯 어딘가 종잡을 수 없어서, 자꾸 한 걸음 더 다가가게 되는 사람.</p>
+        </div>
+      </article>
+
+      <article class="card" id="c-gye">
+        <div class="portrait">
+          <span class="ph-note">캐릭터 일러스트 자리</span>
+          <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1416"/><stop offset="1" stop-color="#0a0809"/></linearGradient></defs>
+            <path d="M90 20 q-18 0 -27 18 q-6 12 -4 27 q-40 10 -58 50 q-18 36 -22 85 l222 0 q-4 -49 -22 -85 q-18 -40 -58 -50 q2 -15 -4 -27 q-9 -18 -27 -18z" fill="url(#pg)" stroke="rgba(178,64,56,.3)" stroke-width="1"/>
+            <path d="M52 40 q38 -22 76 0 q-10 26 -38 28 q-28 -2 -38 -28z" fill="rgba(178,64,56,.55)"/>
+            <path d="M70 52 q8 4 14 0 M96 52 q8 4 14 0" fill="none" stroke="rgba(236,231,218,.85)" stroke-width="2.6" stroke-linecap="round"/>
+            <circle cx="58" cy="64" r="2.4" fill="rgba(205,199,187,.9)"/><circle cx="122" cy="64" r="2.4" fill="rgba(205,199,187,.9)"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>이겸 <span class="tag">바 사장</span></h3>
+          <div class="role">185cm · 갈색 중발(끝 콜드 금발) · 검은 눈</div>
+          <p class="quote">"영업 끝났어요. 문에 써 붙였는데, 글을 못 읽으시나 보네요."</p>
+          <p class="lede">기타를 손에서 놓고 마지못해 LP바를 지키는, 늘 짜증이 묻은 남자. 첫인상은 가시투성이라 손님을 골라 받고 비꼬기 일쑤지만, <b>무뚝뚝함 사이로 다정함이 자꾸 실수처럼 새어 나온다</b>. 좋아하는 곡이 흐를 때의 옆얼굴만은, 본인도 모르게 부드러워진다.</p>
+        </div>
+      </article>
+
+      <article class="card" id="c-rok">
+        <div class="portrait">
+          <span class="ph-note">캐릭터 일러스트 자리</span>
+          <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#13181c"/><stop offset="1" stop-color="#080a0c"/></linearGradient></defs>
+            <path d="M90 18 q-20 0 -29 18 q-7 13 -5 29 q-42 10 -60 52 q-18 36 -22 83 l232 0 q-4 -47 -22 -83 q-18 -42 -60 -52 q2 -16 -5 -29 q-9 -18 -29 -18z" fill="url(#pr)" stroke="rgba(93,116,132,.3)" stroke-width="1"/>
+            <path d="M50 46 q40 -26 80 0 q-6 22 -22 30 l-36 0 q-16 -8 -22 -30z" fill="rgba(40,52,62,.85)"/>
+            <path d="M70 56 q8 4 14 0" fill="none" stroke="rgba(93,116,132,1)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M96 56 q8 4 14 0" fill="none" stroke="rgba(205,199,187,.55)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="103" cy="58" r="1.6" fill="rgba(236,231,218,.5)"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>청록 <span class="tag">천문학자</span></h3>
+          <div class="role">191cm · 흑발 숏컷 · 파란 눈</div>
+          <p class="quote">"내 말 믿지? 대답은 천천히 해도 돼."</p>
+          <p class="lede">남들에겐 차갑고 무심한 옆집 사람. 그런데 <b>당신을 보는 순간에만 얼굴이 풀어진다</b>. 별의 좌표를 적던 수첩 한 귀퉁이에 어느새 당신의 이야기가 늘어 가고, 무심한 말투 끝에는 늘 당신을 향한 시선이 매달려 있다. 무뚝뚝한 다정함이 가장 깊은 사람.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- 세계관 -->
+  <div class="panel" id="p-world">
+    <div class="sec-eyebrow">세계</div>
+    <h2 class="sec-h">해가 사라진 지 수백 년</h2>
+    <div class="lore">
+      <div class="lore-item"><h4><em>밤</em>해는 전설이 되었다</h4>
+        <p>아주 오래전 해가 떠오르기를 멈췄고, 지금 사람들은 해를 본 적도 없이 밤을 당연하게 여기며 산다. <b>'마지막 아침'은 교과서 속 옛이야기일 뿐</b>, 누구도 낮을 그리워하지 않는다. 세상은 그저, 밤인 채로 굴러간다.</p></div>
+      <div class="lore-item"><h4><em>도시</em>별 아래의 생활</h4>
+        <p>LED 농장이 곡식을 기르고, 인공 일광 카페가 햇빛을 흉내 낸다. 사람들은 <b>별자리로 계절을 세고</b>, 신호등 불빛으로 거리의 시간을 읽는다. 어둠이 일상이 된 도시에서도, 누군가는 여전히 고개를 들어 하늘을 본다.</p></div>
+      <div class="lore-item"><h4><em>만남</em>어느 밤의 세 사람</h4>
+        <p>언덕을 제 집처럼 거니는 이름 모를 남자, 손님을 골라 받는 갈색 머리의 바 사장, 별의 좌표 옆에 무언가를 적어 가는 옆집 천문학자. <b>같은 도시의 밤을 사는 세 사람</b>이, 어느 밤 당신과 마주친다. 이야기가 어디에서 시작될지는, 당신의 선택에 달려 있다.</p></div>
+      <div class="lore-item"><h4><em>정서</em>비장보다 애틋함</h4>
+        <p>이 이야기는 거창한 사건보다, 한 사람을 향한 마음의 결을 따라간다. <b>비장한 긴장보다 애틋한 그리움</b>이 이 밤의 정서다. 셋에게 이번 밤의 당신은, 늘 처음이자 전부다.</p></div>
+    </div>
+  </div>
+</section>
+
+<script>
+const $=id=>document.getElementById(id);
+
+/* ═══════════════════════════════════════════════════════════════
+   ▼▼▼ 여기만 고치면 됩니다 — 이미지 / BGM 연결 ▼▼▼
+   파일을 같은 폴더(또는 assets 폴더)에 넣고, 따옴표 안에 경로만 적으세요.
+   비워두면("") 기존 실루엣·플레이스홀더가 그대로 보입니다.
+   ─────────────────────────────────────────────────────────────── */
+
+/* 1) 프롤로그(루트)별 배경음악 — 해당 루트로 들어가면 자동 재생됩니다 */
+const BGM = {
+  hill : "",   // 언덕(현월) 루트 브금   예: "assets/bgm/hill.mp3"
+  bar  : "",   // 심야(이겸) 루트 브금   예: "assets/bgm/bar.mp3"
+  free : "",   // 설계 루트 브금         예: "assets/bgm/free.mp3"
+  lobby: ""    // 로비(인물·세계관) 브금 예: "assets/bgm/lobby.mp3"  (선택)
+};
+/* ▲▲▲ 여기까지만 고치면 됩니다 ▲▲▲ ═══════════════════════════════ */
+
+/* 커서 */
+const cur=$('cur'),ring=$('ring');
+let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function l(){rx+=(mx-rx)*.16;ry+=(my-ry)*.16;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(l)})();
+addEventListener('mouseover',e=>{if(e.target.closest('.hovt,button'))document.body.classList.add('hov')});
+addEventListener('mouseout',e=>{if(e.target.closest('.hovt,button'))document.body.classList.remove('hov')});
+
+/* 별 */
+const sky=$('sky'),ctx=sky.getContext('2d');let stars=[];
+function rs(){sky.width=innerWidth;sky.height=innerHeight;stars=Array.from({length:Math.min(240,Math.floor(innerWidth/4.5))},()=>({x:Math.random()*sky.width,y:Math.random()*sky.height,r:Math.random()*1.3+.2,p:Math.random()*6.28,s:.4+Math.random()*1.2}))}
+rs();addEventListener('resize',rs);
+let dim=0;
+(function dr(t){ctx.clearRect(0,0,sky.width,sky.height);const d=1-dim;for(const s of stars){const tw=.35+.65*Math.abs(Math.sin(t*.0004*s.s+s.p));ctx.globalAlpha=tw*.78*d;ctx.fillStyle='#ece7da';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();}ctx.globalAlpha=1;requestAnimationFrame(dr)})(0);
+
+/* 화면 전환 */
+const screens=['gate','routes','vn','title','lobby'].map($);
+function show(id){screens.forEach(s=>s.classList.toggle('on',s.id===id))}
+
+/* 루트별 미연시 스크립트 */
+const SCRIPTS={
+ hill:[
+  {t:'cap',x:'별이 강처럼 쏟아지던 밤이었다.',hold:1900,dimsky:.5},
+  {t:'nar',x:'해가 사라진 지 수백 년. 사람들은 해를 본 적도 없이 밤을 당연하게 여기며 산다. 별자리로 계절을 세고, 인공 일광 아래에서 점심을 먹는 세계.'},
+  {t:'nar',x:'오늘 당신은 동네 끝 언덕에 서 있다. 가로등이 끊긴 산책로 위로, 별이 강처럼 쏟아지고 있었다.'},
+  {t:'nar',x:'누구라도 그 아래 서면 한마디쯤 흘리게 되는, 그런 하늘이었다.'},
+  {t:'dlg',who:'당신',cls:'nm-sys',x:'"…참 예쁘다."'},
+  {t:'sys',x:'그 말이 입 밖으로 떨어진 순간, 등 뒤의 어둠이 뒤늦게 출렁였다.',sil:true,dimsky:.6},
+  {t:'nar',x:'돌아본 자리에 검은 두루마기 자락이 내려앉아 있었다. 허리께까지 오는 검은 머리채 안쪽으로 흰 층이 별빛처럼 비치고, 밝은 회색 눈이 반쯤 내리뜬 채 이쪽을 들여다보고 있었다.'},
+  {t:'dlg',who:'???',cls:'nm-wol',x:'"방금 그 말, 한 번만 더 해 주련? 색시야."'},
+  {t:'dlg',who:'현월',cls:'nm-wol',x:'"이런 밤에 혼자 별을 보다니. …마음에 드는구나."'},
+  {t:'flash'},
+  {t:'sys',x:'처음 보는 얼굴인데, 이상하게 낯설지가 않았다.'},
+  {t:'title'}
+ ],
+ bar:[
+  {t:'cap',x:'비가 별빛을 지우는 밤이었다.',hold:1800,dimsky:.55},
+  {t:'nar',x:'우산도 없이 시장 뒷골목으로 뛰어든 발끝에서 빗물이 튄다. 처마를 따라 도망치던 시선 끝에, 지하로 내려가는 좁은 계단이 걸렸다.'},
+  {t:'nar',x:'문에는 손글씨 한 장. \u2018영업 끝\u2019. 그런데 문틈으로 호박색 불빛과 마른 수건 냄새가 새어 나오고 있었다.'},
+  {t:'sys',x:'비를 피할 곳이 필요한 사람에게, 그 정도면 충분한 핑계였다.'},
+  {t:'nar',x:'문을 밀자 종이 울렸다. 어두운 바 안쪽, 은붙이만 반짝이는 카운터 뒤에서 갈색 머리의 남자가 잔을 닦다 말고 고개를 들었다.'},
+  {t:'dlg',who:'???',cls:'nm-gye',x:'"영업 끝났어요. 문에 써 붙였는데, 글을 못 읽으시나 보네요."'},
+  {t:'sys',x:'말은 그렇게 하면서도, 그는 마른 수건 한 장을 카운터 위로 밀어 놓았다. 그 손이 잠깐 멈칫했다는 걸 본인은 알지 못했다.',sil:false},
+  {t:'dlg',who:'이겸',cls:'nm-gye',x:'"…뭐 하세요. 비 떨어지잖아요. 들어오든가."'},
+  {t:'flash'},
+  {t:'sys',x:'환영받지 못한 손님으로, 오늘 밤이 시작된다.'},
+  {t:'title'}
+ ],
+ free:[
+  {t:'cap',x:'해가 사라진 지 수백 년.',hold:1700,dimsky:.4},
+  {t:'nar',x:'사람들은 밤을 당연하게 여기며 산다. 시계로 아침을 정하고, 별자리로 계절을 세고, 달력은 여전히 넘어간다.'},
+  {t:'nar',x:'이 동네에는 세 사람이 있다. 언덕을 제 집처럼 거니는 이름 모를 남자, 손님을 골라 받는 갈색 머리의 바 사장, 그리고 자꾸 시선이 옆집으로 도는 천문학자.'},
+  {t:'sys',x:'세 사람 모두 무언가를 세고 있다. 별이 뜨고 지는 밤들을, 신호등의 박자를, 별자리에 붙여 둔 이름들을.'},
+  {t:'nar',x:'이야기가 어디에서 시작되든, 그들은 이미 오래 당신을 기다린 듯 군다. 이제, 당신의 첫 문장이 첫 장면을 연다.'},
+  {t:'title'}
+ ]
+};
+
+let queue=[],idx=0,typing=false,tm=null,at=null,busy=false,full='',el=null;
+const vnName=$('vnName'),vnLine=$('vnLine'),vnNext=$('vnNext'),vnSil=$('vnSil'),vnFlash=$('vnFlash'),vnBox=$('vnBox'),vnSkip=$('vnSkip'),vnHint=$('vnHint');
+
+function type(node,text){typing=true;vnNext.classList.remove('show');node.textContent='';let i=0;full=text;el=node;clearInterval(tm);tm=setInterval(()=>{node.textContent=text.slice(0,++i);if(i>=text.length){clearInterval(tm);typing=false;vnNext.classList.add('show')}},32)}
+function finish(){clearInterval(tm);typing=false;if(el)el.textContent=full;vnNext.classList.add('show')}
+
+function step(){
+  clearTimeout(at);busy=false;
+  if(idx>=queue.length)return;
+  const s=queue[idx++];
+  if(s.dimsky!==undefined)dim=s.dimsky;
+  if(s.sil)vnSil.classList.add('show');
+  switch(s.t){
+    case 'cap':vnBox.style.opacity=1;vnName.innerHTML='<span class="nm-sys">PROLOGUE</span>';vnLine.classList.remove('dlg');type(vnLine,s.x);break;
+    case 'sys':vnBox.style.opacity=1;vnName.innerHTML='<span class="nm-sys">\u00b7</span>';vnLine.classList.remove('dlg');type(vnLine,s.x);break;
+    case 'nar':vnBox.style.opacity=1;vnName.innerHTML='';vnLine.classList.remove('dlg');type(vnLine,s.x);break;
+    case 'dlg':vnBox.style.opacity=1;vnName.innerHTML='<span class="'+(s.cls||'')+'">'+s.who+'</span>';vnLine.classList.add('dlg');type(vnLine,s.x);break;
+    case 'flash':busy=true;vnFlash.style.opacity=.85;at=setTimeout(()=>{vnFlash.style.opacity=0;step()},680);break;
+    case 'title':endVN();break;
+  }
+}
+function advance(){if(!$('vn').classList.contains('on'))return;if(busy)return;if(typing){finish();return}step()}
+function startVN(route){
+  queue=SCRIPTS[route]||SCRIPTS.hill;idx=0;dim=.5;busy=false;
+  vnSil.classList.remove('show');vnName.innerHTML='';vnLine.textContent='';vnBox.style.opacity=0;
+  vnSkip.style.display='block';vnHint.style.display='block';
+  playBGM(route);
+  show('vn');setTimeout(step,800);
+}
+function endVN(){vnSkip.style.display='none';vnHint.style.display='none';dim=0;show('title');setTimeout(()=>$('title').classList.add('lit'),100);setTimeout(()=>{$('title').classList.remove('lit');show('lobby');playBGM('lobby')},4000)}
+
+/* ── 오디오(BGM) ── */
+const bgmAudio=$('bgm');let muted=false,curBGM=null,fadeTimer=null;
+function fade(to,then){clearInterval(fadeTimer);const dur=14,stepv=(to-bgmAudio.volume)/dur;fadeTimer=setInterval(()=>{let v=bgmAudio.volume+stepv;if((stepv>=0&&v>=to)||(stepv<0&&v<=to)){v=to;clearInterval(fadeTimer);if(then)then()}bgmAudio.volume=Math.max(0,Math.min(1,v))},40)}
+function playBGM(key){
+  const url=BGM[key]||'';
+  if(!url){curBGM=null;if(!bgmAudio.paused)fade(0,()=>bgmAudio.pause());return}
+  if(curBGM===key&&!bgmAudio.paused)return;
+  curBGM=key;
+  const start=()=>{bgmAudio.src=url;bgmAudio.currentTime=0;bgmAudio.volume=0;if(!muted)bgmAudio.play().then(()=>fade(.7)).catch(()=>{})};
+  if(!bgmAudio.paused)fade(0,start);else start();
+}
+$('audioToggle').addEventListener('click',e=>{
+  e.stopPropagation();muted=!muted;const t=$('audioToggle');t.classList.toggle('on',!muted);
+  t.querySelector('.lbl').textContent=muted?'BGM OFF':'BGM ON';
+  if(muted){bgmAudio.pause()}
+  else if(curBGM&&BGM[curBGM]){if(!bgmAudio.src)bgmAudio.src=BGM[curBGM];bgmAudio.play().then(()=>fade(.7)).catch(()=>{})}
+});
+
+/* 입력 */
+$('enterBtn').addEventListener('click',e=>{e.stopPropagation();show('routes')});
+$('routeBack').addEventListener('click',e=>{e.stopPropagation();show('gate')});
+document.querySelectorAll('.route').forEach(b=>b.addEventListener('click',()=>startVN(b.dataset.route)));
+vnSkip.addEventListener('click',e=>{e.stopPropagation();endVN()});
+$('vn').addEventListener('click',advance);
+$('replayBtn').addEventListener('click',e=>{e.stopPropagation();$('title').classList.remove('lit');show('routes')});
+addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '||e.key==='z'||e.key==='Z'){
+    if($('gate').classList.contains('on')){e.preventDefault();show('routes');return}
+    if($('vn').classList.contains('on')){e.preventDefault();advance()}
+  }
+  if(e.key==='Escape'&&$('routes').classList.contains('on'))show('gate');
+});
+
+/* 로비 탭 */
+document.querySelectorAll('.lb-tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.lb-tab').forEach(x=>x.classList.remove('act'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('act'));
+  t.classList.add('act');$(t.dataset.p).classList.add('act');
+}));
+</script>
+</body>
+</html>
