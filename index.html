@@ -86,9 +86,9 @@ body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
 .r-back:hover{color:var(--star);border-color:var(--line2)}
 
 /* ── 미연시(VN) ── */
-#vn{z-index:26;justify-content:flex-end}
+#vn{z-index:26;justify-content:flex-end;user-select:none}
 #vnStage{position:absolute;inset:0;overflow:hidden}
-#vnSil{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(28px);height:min(94vh,960px);width:auto;max-width:none;opacity:0;transition:opacity 2s ease,transform 2s ease;pointer-events:none}
+#vnSil{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(28px);height:min(94vh,960px);width:auto;max-width:none;opacity:0;transition:opacity 2s ease,transform 2s ease;pointer-events:none;user-select:none;-webkit-user-drag:none}
 #vnSil.show{opacity:.9;transform:translateX(-50%) translateY(0)}
 #vnFlash{position:absolute;inset:0;background:#dcd6ca;opacity:0;pointer-events:none;transition:opacity .85s}
 #vnBox{position:relative;width:min(840px,92vw);margin:0 auto 6vh;z-index:5;background:linear-gradient(rgba(8,8,12,.86),rgba(8,8,12,.96));border:1px solid var(--line);border-radius:3px;padding:26px 34px 30px;box-shadow:0 18px 56px rgba(0,0,0,.6);transition:opacity .6s}
@@ -291,8 +291,8 @@ body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
 <!-- 미연시 -->
 <section class="screen" id="vn">
   <div id="vnStage">
-    <!-- 프롤로그 등장 이미지 : 아래 VN_SPRITE 설정에서 루트별 주소를 넣으면 여기에 나타납니다 -->
-    <img id="vnSil" alt="">
+    <!-- 프롤로그 등장 이미지 : 위쪽 VN_IMAGES 설정에서 클릭 순서대로 이미지가 여기에 나타납니다 -->
+    <img id="vnSil" alt="" draggable="false">
     <div id="vnFlash"></div>
   </div>
   <div id="vnBox" class="hovt">
@@ -468,12 +468,37 @@ const CHAR_IMG = {
   rok : { main:"https://s2gye.uk/gmm/rok.png", gallery:["https://s2gye.uk/gmm/r_ngt_1.png","https://s2gye.uk/gmm/r_h_2.png","https://s2gye.uk/gmm/r_sky_4.png","https://s2gye.uk/gmm/r_true_5.png","https://s2gye.uk/gmm/r_h_9.png"]  }
 };
 
-/* 3) 프롤로그(미연시)에 등장하는 이미지 — 해당 루트를 진행하면 배경에 떠오릅니다.
-   비워 두면("") 아무것도 안 나옵니다. */
-const VN_SPRITE = {
-  hill : "https://s2gye.uk/gmm/wol.png",   // 언덕 루트 · 현월
-  bar  : "",                                // 심야 루트 · 이겸  (예: "https://s2gye.uk/gmm/gyoem.png")
-  free : ""                                 // 설계 루트
+/* 3) 프롤로그(미연시) 이미지 — 클릭(대사) 순서대로 위에서부터 한 장씩 나옵니다.
+   · ""(빈칸)   = 그 대사에선 그림 없음
+   · "주소"     = 그 대사부터 그 그림으로 바뀜
+   · 목록이 끝나면(줄이 없으면) 마지막에 나온 그림이 계속 유지됩니다.
+   숫자 주석은 "몇 번째 클릭인지"라 참고만 하세요. 그림 바꾸고 싶은 줄에 주소만 넣으면 됩니다. */
+const VN_IMAGES = {
+  hill : [
+    "https://s2gye.uk/gmm/web_hill_1.png",                              // 1. 별이 강처럼 쏟아지던 밤이었다.
+    "https://s2gye.uk/gmm/web_hill_1.png",                              // 2. 해가 사라진 지 수백 년...
+    "https://s2gye.uk/gmm/web_hill_1.png",                              // 3. 오늘 당신은 동네 끝 언덕에 서 있다...
+    "https://s2gye.uk/gmm/web_hill_1.png",                              // 4. 누구라도 그 아래 서면 한마디쯤...
+    "https://s2gye.uk/gmm/web_hill_1.png",                              // 5. "…참 예쁘다."
+    "https://s2gye.uk/gmm/web_hill_2.png",  // 6. 등 뒤의 어둠이 출렁였다  ← 여기서 현월 등장
+    // 7번째 클릭부터는 줄을 안 넣으면 위 그림이 그대로 유지됩니다.
+    // 바꾸고 싶으면 아래처럼 주소를 한 줄 더 추가하세요:
+    // "https://s2gye.uk/gmm/wol2.png",  // 7. 돌아본 자리에...
+  ],
+  bar  : [
+    "https://s2gye.uk/gmm/web_bar_1.png",
+    "https://s2gye.uk/gmm/web_bar_1.png",
+    "https://s2gye.uk/gmm/web_bar_1.png",
+    "https://s2gye.uk/gmm/web_bar_1.png",
+    "https://s2gye.uk/gmm/web_bar_2.png",
+  ],   // 심야 루트 (예: "", "", "https://s2gye.uk/gmm/gyoem.png", ...)
+  free : [
+    "https://s2gye.uk/gmm/web_setting_1.png",
+    "https://s2gye.uk/gmm/web_setting_1.png",
+    "https://s2gye.uk/gmm/web_setting_1.png",
+    "https://s2gye.uk/gmm/web_setting_1.png",
+    "https://s2gye.uk/gmm/web_setting_2.png",
+  ]    // 설계 루트
 };
 /* ▲▲▲ 여기까지만 고치면 됩니다 ▲▲▲ ═══════════════════════════════ */
 
@@ -535,7 +560,7 @@ const SCRIPTS={
  ]
 };
 
-let queue=[],idx=0,typing=false,tm=null,at=null,busy=false,full='',el=null;
+let queue=[],idx=0,typing=false,tm=null,at=null,busy=false,full='',el=null,curRoute='hill',vnLineNo=0;
 const vnName=$('vnName'),vnLine=$('vnLine'),vnNext=$('vnNext'),vnSil=$('vnSil'),vnFlash=$('vnFlash'),vnBox=$('vnBox'),vnSkip=$('vnSkip'),vnHint=$('vnHint');
 if(vnSil)vnSil.onerror=()=>vnSil.classList.remove('show');   /* 이미지 로드 실패 시 숨김 */
 
@@ -547,7 +572,14 @@ function step(){
   if(idx>=queue.length)return;
   const s=queue[idx++];
   if(s.dimsky!==undefined)dim=s.dimsky;
-  if(s.sil&&vnSil&&vnSil.getAttribute('src'))vnSil.classList.add('show');
+  /* 대사(글이 나오는 스텝)마다 VN_IMAGES 목록에서 한 장씩 순서대로 적용 */
+  if(s.t==='cap'||s.t==='sys'||s.t==='nar'||s.t==='dlg'){
+    const u=(VN_IMAGES[curRoute]||[])[vnLineNo++];
+    if(u!==undefined&&vnSil){
+      if(u){vnSil.src=u;vnSil.classList.add('show');}
+      else{vnSil.classList.remove('show');}
+    }
+  }
   switch(s.t){
     case 'cap':vnBox.style.opacity=1;vnName.innerHTML='<span class="nm-sys">PROLOGUE</span>';vnLine.classList.remove('dlg');type(vnLine,s.x);break;
     case 'sys':vnBox.style.opacity=1;vnName.innerHTML='<span class="nm-sys">\u00b7</span>';vnLine.classList.remove('dlg');type(vnLine,s.x);break;
@@ -559,8 +591,8 @@ function step(){
 }
 function advance(){if(!$('vn').classList.contains('on'))return;if(busy)return;if(typing){finish();return}step()}
 function startVN(route){
-  queue=SCRIPTS[route]||SCRIPTS.hill;idx=0;dim=.5;busy=false;
-  if(vnSil){const sp=VN_SPRITE[route]||'';if(sp)vnSil.src=sp;else vnSil.removeAttribute('src');vnSil.classList.remove('show');}
+  queue=SCRIPTS[route]||SCRIPTS.hill;idx=0;dim=.5;busy=false;curRoute=route;vnLineNo=0;
+  if(vnSil){vnSil.removeAttribute('src');vnSil.classList.remove('show');}
   vnName.innerHTML='';vnLine.textContent='';vnBox.style.opacity=0;
   vnSkip.style.display='block';vnHint.style.display='block';
   playBGM(route);
