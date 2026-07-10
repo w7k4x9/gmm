@@ -155,11 +155,73 @@ body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
 .lore-item p{font-family:var(--serif);font-size:13.5px;line-height:2.05;color:var(--paper);word-break:keep-all}
 .lore-item p b{color:var(--star);font-weight:500}
 
+/* 카드 → 상세 진입 */
+.card .more{display:flex;align-items:center;gap:8px;margin-top:18px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--acc);opacity:.55;transition:opacity .3s}
+.card:hover .more{opacity:1}
+.card .more .arrow{transition:transform .3s}
+.card:hover .more .arrow{transform:translateX(5px)}
+.portrait img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:.94}
+
+/* ── 인물 상세 ── */
+#detail{position:fixed;inset:0;z-index:58;background:rgba(4,4,8,.9);backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .55s ease;overflow-y:auto}
+#detail.on{opacity:1;pointer-events:auto}
+#detail::-webkit-scrollbar{width:4px}#detail::-webkit-scrollbar-thumb{background:var(--line2)}
+.dt-wrap{max-width:1080px;margin:0 auto;padding:26px clamp(20px,6vw,64px) 90px}
+.dt-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:34px}
+.dt-back{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--paper-dim);border:1px solid var(--line);padding:9px 20px;border-radius:2px;transition:.3s}
+.dt-back:hover{color:var(--star);border-color:var(--line2)}
+.dt-crumb{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--paper-dim)}
+.dt-crumb b{color:var(--acc);font-weight:400}
+.dt-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,4fr);gap:clamp(24px,4vw,48px);align-items:start;animation:fade .7s ease}
+/* 좌: 프로필 */
+.dt-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.46em;text-indent:.46em;color:var(--acc);margin-bottom:14px}
+.dt-name{font-family:var(--serif);font-weight:700;font-size:clamp(40px,6vw,58px);letter-spacing:.14em;color:var(--star);line-height:1.1;display:flex;align-items:baseline;gap:16px;text-shadow:0 0 46px var(--accSoft)}
+.dt-name .tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--acc)}
+.dt-quote{font-family:var(--serif);font-size:15.5px;line-height:2;color:var(--star);border-left:2px solid var(--acc);padding-left:15px;margin:26px 0 30px;word-break:keep-all}
+.dt-rows{border-top:1px solid var(--line);margin-bottom:28px}
+.dt-row{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:12px 2px;border-bottom:1px solid var(--line)}
+.dt-row dt{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--paper-dim);padding-top:3px}
+.dt-row dd{font-family:var(--serif);font-size:13.5px;line-height:1.8;color:var(--paper);word-break:keep-all}
+.dt-lede{font-family:var(--serif);font-size:14px;line-height:2.1;color:var(--paper);word-break:keep-all;margin-bottom:22px}
+.dt-lede b{color:var(--star);font-weight:500}
+.dt-hint{font-family:var(--serif);font-size:12.5px;line-height:2;color:var(--paper-dim);word-break:keep-all;padding:16px 18px;border:1px dashed var(--line2);border-radius:3px;margin-bottom:26px}
+.dt-hint em{font-family:var(--mono);font-style:normal;font-size:9.5px;letter-spacing:.3em;color:var(--acc);display:block;margin-bottom:8px}
+.dt-keys{display:flex;flex-wrap:wrap;gap:8px}
+.dt-key{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--paper-dim);border:1px solid var(--line);border-radius:2px;padding:7px 12px;transition:.3s}
+.dt-key:hover{color:var(--acc);border-color:var(--acc)}
+/* 우: 일러스트 */
+.dt-hero{position:sticky;top:26px;border:1px solid var(--line);border-radius:3px;overflow:hidden;aspect-ratio:3/4;background:radial-gradient(130% 100% at 50% 0%,var(--accSoft),transparent 72%),linear-gradient(rgba(16,16,24,.5),rgba(8,8,12,.9));display:flex;align-items:flex-end;justify-content:center}
+.dt-hero img{width:100%;height:100%;object-fit:cover;object-position:top}
+.dt-hero svg{width:auto;height:82%;opacity:.9}
+.dt-hero .ph-note{position:absolute;top:14px;left:16px;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--paper-dim);opacity:.6}
+/* 하단: 갤러리 캐러셀 */
+.dt-gal{margin-top:clamp(40px,7vh,64px);animation:fade .8s ease}
+.gal-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px}
+.gal-title{font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:.12em;color:var(--star)}
+.gal-title em{font-family:var(--mono);font-style:normal;font-size:10px;letter-spacing:.3em;color:var(--paper-dim);margin-left:12px}
+.gal-count{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--acc)}
+.gal-frame{position:relative;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:linear-gradient(rgba(12,12,18,.6),rgba(6,6,10,.9))}
+.gal-track{display:flex;transition:transform .55s cubic-bezier(.22,.8,.26,1);touch-action:pan-y}
+.gal-slide{flex:0 0 100%;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;user-select:none}
+.gal-slide img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+.gal-slide .ph-moon{width:44px;height:44px;opacity:.5}
+.gal-slide .ph-txt{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--paper-dim)}
+.gal-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line2);border-radius:50%;background:rgba(8,8,12,.72);color:var(--paper-dim);font-size:15px;transition:.3s}
+.gal-btn:hover{color:var(--star);border-color:var(--acc)}
+.gal-btn.prev{left:14px}.gal-btn.next{right:14px}
+.gal-dots{display:flex;justify-content:center;gap:10px;margin-top:16px}
+.gal-dot{width:6px;height:6px;border-radius:50%;background:var(--line2);transition:.3s;padding:0}
+.gal-dot.act{background:var(--acc);box-shadow:0 0 8px var(--accSoft);transform:scale(1.25)}
+
 @media(max-width:780px){
   .r-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}
   .lb-head{flex-wrap:wrap;gap:12px}.lb-tabs{order:3;width:100%}
   .moon{width:80px;height:80px}
   #vnBox{padding:20px 20px 26px}
+  .dt-grid{grid-template-columns:1fr}
+  .dt-hero{position:static;order:-1;max-width:420px;margin:0 auto;width:100%}
+  .dt-row{grid-template-columns:82px 1fr}
+  .gal-btn{width:36px;height:36px}
 }
 /* ── 음악 토글 ── */
 #audioToggle{position:fixed;top:24px;left:28px;z-index:60;font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--paper-dim);border:1px solid var(--line);padding:9px 16px;border-radius:2px;background:rgba(8,8,12,.6);display:flex;align-items:center;gap:9px;transition:.3s}
@@ -266,7 +328,7 @@ body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
     <h2 class="sec-h">같은 밤에 묶인 세 사람</h2>
     <div class="chars">
 
-      <article class="card" id="c-wol">
+      <article class="card hovt" id="c-wol" data-char="wol" role="button" tabindex="0">
         <div class="portrait">
           <span class="ph-note">캐릭터 일러스트 자리</span>
           <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
@@ -285,7 +347,7 @@ body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
         </div>
       </article>
 
-      <article class="card" id="c-gye">
+      <article class="card hovt" id="c-gye" data-char="gye" role="button" tabindex="0">
         <div class="portrait">
           <span class="ph-note">캐릭터 일러스트 자리</span>
           <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
@@ -304,7 +366,7 @@ body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
         </div>
       </article>
 
-      <article class="card" id="c-rok">
+      <article class="card hovt" id="c-rok" data-char="rok" role="button" tabindex="0">
         <div class="portrait">
           <span class="ph-note">캐릭터 일러스트 자리</span>
           <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
@@ -343,6 +405,40 @@ body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
   </div>
 </section>
 
+<!-- 인물 상세 -->
+<div id="detail" aria-hidden="true">
+  <div class="dt-wrap">
+    <div class="dt-top">
+      <button class="dt-back hovt" id="dtBack">← 인물 목록</button>
+      <div class="dt-crumb">인물 · <b id="dtCrumb"></b></div>
+    </div>
+    <div class="dt-grid">
+      <div class="dt-prof">
+        <div class="dt-eyebrow" id="dtEyebrow"></div>
+        <h2 class="dt-name"><span id="dtName"></span><span class="tag" id="dtTag"></span></h2>
+        <p class="dt-quote" id="dtQuote"></p>
+        <dl class="dt-rows" id="dtRows"></dl>
+        <p class="dt-lede" id="dtLede"></p>
+        <div class="dt-hint"><em>어느 밤의 기록</em><span id="dtHint"></span></div>
+        <div class="dt-keys" id="dtKeys"></div>
+      </div>
+      <div class="dt-hero" id="dtHero"></div>
+    </div>
+    <div class="dt-gal">
+      <div class="gal-head">
+        <div class="gal-title">갤러리<em>GALLERY</em></div>
+        <div class="gal-count" id="galCount">1 / 1</div>
+      </div>
+      <div class="gal-frame" id="galFrame">
+        <button class="gal-btn prev hovt" id="galPrev" aria-label="이전">‹</button>
+        <div class="gal-track" id="galTrack"></div>
+        <button class="gal-btn next hovt" id="galNext" aria-label="다음">›</button>
+      </div>
+      <div class="gal-dots" id="galDots"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 const $=id=>document.getElementById(id);
 
@@ -358,6 +454,16 @@ const BGM = {
   bar  : "",   // 심야(이겸) 루트 브금   예: "assets/bgm/bar.mp3"
   free : "",   // 설계 루트 브금         예: "assets/bgm/free.mp3"
   lobby: ""    // 로비(인물·세계관) 브금 예: "assets/bgm/lobby.mp3"  (선택)
+};
+
+/* 2) 캐릭터 이미지 — 인물 카드와 상세 페이지에 자동으로 반영됩니다
+   main    = 대표 일러스트 1장 (카드 초상 + 상세 페이지 오른쪽 큰 이미지)
+   gallery = 하단 슬라이드 갤러리에 들어갈 이미지들 (몇 장이든 가능)
+   비워 두면 지금처럼 실루엣·플레이스홀더가 표시됩니다. */
+const CHAR_IMG = {
+  wol : { main:"", gallery:[] },   // 예: main:"assets/img/wol.png", gallery:["assets/img/wol_1.png","assets/img/wol_2.png"]
+  gye : { main:"", gallery:[] },
+  rok : { main:"", gallery:[] }
 };
 /* ▲▲▲ 여기까지만 고치면 됩니다 ▲▲▲ ═══════════════════════════════ */
 
@@ -481,6 +587,11 @@ addEventListener('keydown',e=>{
     if($('vn').classList.contains('on')){e.preventDefault();advance()}
   }
   if(e.key==='Escape'&&$('routes').classList.contains('on'))show('gate');
+  if($('detail').classList.contains('on')){
+    if(e.key==='Escape'){closeDetail()}
+    if(e.key==='ArrowLeft'){go(galIdx-1)}
+    if(e.key==='ArrowRight'){go(galIdx+1)}
+  }
 });
 
 /* 로비 탭 */
@@ -489,6 +600,128 @@ document.querySelectorAll('.lb-tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('act'));
   t.classList.add('act');$(t.dataset.p).classList.add('act');
 }));
+
+/* ═══ 인물 상세 ═══ */
+const CHARS={
+ wol:{
+  name:'현월',tag:'언덕에서',eyebrow:'첫 번째 밤',acc:'var(--wol)',accSoft:'rgba(154,160,173,.14)',
+  quote:'"방금 그 말, 한 번만 더 해 주련? 색시야."',
+  rows:[
+    ['키','189cm, 다부진 장신'],
+    ['머리칼','허리께 흑발 반묶음, 안쪽에 별빛 같은 흰 층'],
+    ['눈','밝은 회색, 반쯤 내리뜬 눈매'],
+    ['옷차림','늘 검은 두루마기. 이유를 물으면 웃기만 한다'],
+    ['말씨','예스러운 말투가 밴 반말. 천진한 의문문이 잦다'],
+    ['자주 있는 곳','가로등이 끊긴 언덕 산책로']
+  ],
+  lede:'별이 가장 밝은 언덕에 늘 먼저 와 있는 사람. 칭찬 한마디에 한없이 약해져서, 마음에 든 말은 몇 번이고 다시 해 달라 조른다. 인간사에는 놀랄 만큼 무심한데 <b>당신 앞에서만 세상 전부를 궁금해하는 얼굴</b>이 된다. 다정한 듯 종잡을 수 없어서, 자꾸 한 걸음 더 다가가게 되는 사람.',
+  hint:'그가 오래 서 있던 자리의 가로등은 한 박자 늦게 깜빡이고, 그림자는 조금 늦게 자란다. 그리고 처음 만난 밤, 그는 분명 당신의 이름을 묻지 않았다.',
+  keys:['#천진','#예스러운말씨','#언덕','#회색눈','#종잡을수없음','#호칭은색시']
+ },
+ gye:{
+  name:'이겸',tag:'바 사장',eyebrow:'두 번째 밤',acc:'var(--gye)',accSoft:'rgba(178,64,56,.14)',
+  quote:'"영업 끝났어요. 문에 써 붙였는데, 글을 못 읽으시나 보네요."',
+  rows:[
+    ['키','185cm, 잔근육'],
+    ['머리칼','갈색 중발 반묶음, 끝에 사위는 백금빛'],
+    ['눈','검은 눈, 웃는상. 웃을 때 송곳니가 보인다'],
+    ['직업','시장 뒷골목 지하 LP바 사장'],
+    ['말씨','비꼬는 존대. 축객이 인사말이다'],
+    ['자주 있는 곳','마감 후에도 불이 꺼지지 않는 카운터']
+  ],
+  lede:'기타를 손에서 놓고 마지못해 바를 지키는, 늘 짜증이 묻은 남자. 손님을 골라 받고 문전박대가 특기지만, 비 맞은 사람 앞으로는 <b>마른 수건이 먼저 카운터를 건너간다</b>. 다정함이 자꾸 실수처럼 새어 나오고, 들키면 정색하며 존댓말로 덮는다. 좋아하는 곡이 흐를 때의 옆얼굴만은 본인도 모르게 부드러워진다.',
+  hint:'벽에 걸린 기타에는 손자국 하나 없이 먼지만 앉아 있다. 그런데 마감 뒤 혼자 남은 바에서, 가끔 문틈으로 낮게 튕기는 여섯 줄 소리가 샌다.',
+  keys:['#가시돋친존대','#LP바','#송곳니','#실수같은다정','#음악','#문전박대']
+ },
+ rok:{
+  name:'청록',tag:'천문학자',eyebrow:'세 번째 밤',acc:'var(--rok)',accSoft:'rgba(93,116,132,.14)',
+  quote:'"내 말 믿지? 대답은 천천히 해도 돼."',
+  rows:[
+    ['키','191cm, 다부진 체격'],
+    ['머리칼','흑발 숏컷, 짙은 다크서클'],
+    ['눈','오른눈은 깊은 파랑, 왼눈은 초점이 흐리다'],
+    ['직업','천문학자. 별의 좌표를 적는 게 일이다'],
+    ['말씨','건조한 반말. 당신 앞에서만 말끝이 풀어진다'],
+    ['자주 있는 곳','옆집 창가, 새벽 골목, 당신의 반경']
+  ],
+  lede:'남들에겐 차갑고 무심해서 사람들이 먼저 길을 비키는 옆집 사람. 그런데 <b>당신을 보는 순간에만 얼굴이 풀어진다</b>. 별의 좌표를 적던 수첩 한 귀퉁이에 어느새 당신의 이야기가 늘어 가고, 관측을 핑계로 새벽 골목에서 자주 마주친다. 무뚝뚝한 말투 끝에 늘 당신을 향한 시선이 매달려 있는, 다정함이 가장 깊은 사람.',
+  hint:'왼눈이 시큰거리는 날이면 그는 무슨 일이 있어도 곁을 떠나지 않는다. 이유를 물으면 대답 대신, 그날의 하늘 좌표만 수첩에 적는다.',
+  keys:['#옆집','#오드아이','#건조한반말','#관측핑계','#수첩','#가장깊은다정']
+ }
+};
+
+const PH_MOON='<svg class="ph-moon" viewBox="0 0 100 100"><defs><mask id="gm__M__"><rect width="100" height="100" fill="#fff"/><circle cx="62" cy="42" r="40" fill="#000"/></mask></defs><circle cx="50" cy="52" r="38" fill="#ece7da" mask="url(#gm__M__)" opacity=".8"/></svg>';
+const dtl=$('detail'),galTrack=$('galTrack'),galDots=$('galDots'),galCount=$('galCount');
+let curChar=null,galIdx=0,galLen=1;
+
+function openDetail(key){
+  const c=CHARS[key];if(!c)return;
+  curChar=key;
+  dtl.style.setProperty('--acc',c.acc);
+  dtl.style.setProperty('--accSoft',c.accSoft);
+  $('dtCrumb').textContent=c.name;
+  $('dtEyebrow').textContent=c.eyebrow;
+  $('dtName').textContent=c.name;
+  $('dtTag').textContent=c.tag;
+  $('dtQuote').textContent=c.quote;
+  $('dtRows').innerHTML=c.rows.map(r=>'<div class="dt-row"><dt>'+r[0]+'</dt><dd>'+r[1]+'</dd></div>').join('');
+  $('dtLede').innerHTML=c.lede;
+  $('dtHint').textContent=c.hint;
+  $('dtKeys').innerHTML=c.keys.map(k=>'<span class="dt-key">'+k+'</span>').join('');
+  /* 대표 이미지 */
+  const img=CHAR_IMG[key]||{};
+  const hero=$('dtHero');
+  if(img.main){hero.innerHTML='<img src="'+img.main+'" alt="'+c.name+' 일러스트">'}
+  else{
+    const src=document.querySelector('#c-'+({wol:'wol',gye:'gye',rok:'rok'})[key]+' .portrait svg');
+    hero.innerHTML='<span class="ph-note">대표 일러스트 자리</span>'+(src?src.outerHTML.replace(/id="(p[wgr])"/g,'id="$1_dt"').replace(/url\(#(p[wgr])\)/g,'url(#$1_dt)'):'');
+  }
+  /* 갤러리 */
+  buildGallery(img.gallery||[],c.name);
+  dtl.classList.add('on');dtl.setAttribute('aria-hidden','false');dtl.scrollTop=0;
+}
+function closeDetail(){dtl.classList.remove('on');dtl.setAttribute('aria-hidden','true');curChar=null}
+
+function buildGallery(list,name){
+  const slides=list.length
+    ? list.map((u,i)=>'<div class="gal-slide"><img src="'+u+'" alt="'+name+' 갤러리 '+(i+1)+'" draggable="false"></div>')
+    : [1,2,3].map(n=>'<div class="gal-slide">'+PH_MOON.replace(/__M__/g,n)+'<span class="ph-txt">갤러리 이미지 자리 '+n+'</span></div>');
+  galLen=slides.length;galIdx=0;
+  galTrack.innerHTML=slides.join('');
+  galDots.innerHTML=slides.map((_,i)=>'<button class="gal-dot hovt" data-i="'+i+'" aria-label="'+(i+1)+'번째 이미지"></button>').join('');
+  galDots.querySelectorAll('.gal-dot').forEach(d=>d.addEventListener('click',()=>go(+d.dataset.i)));
+  go(0);
+}
+function go(i){
+  galIdx=(i+galLen)%galLen;
+  galTrack.style.transform='translateX(-'+(galIdx*100)+'%)';
+  galCount.textContent=(galIdx+1)+' / '+galLen;
+  galDots.querySelectorAll('.gal-dot').forEach((d,n)=>d.classList.toggle('act',n===galIdx));
+}
+$('galPrev').addEventListener('click',()=>go(galIdx-1));
+$('galNext').addEventListener('click',()=>go(galIdx+1));
+/* 스와이프 */
+let swX=null;
+galTrack.addEventListener('pointerdown',e=>{swX=e.clientX});
+addEventListener('pointerup',e=>{
+  if(swX===null||!dtl.classList.contains('on'))return;
+  const d=e.clientX-swX;swX=null;
+  if(Math.abs(d)>48)go(galIdx+(d<0?1:-1));
+});
+
+/* 카드 클릭 → 상세 */
+document.querySelectorAll('.card[data-char]').forEach(cd=>{
+  cd.addEventListener('click',()=>openDetail(cd.dataset.char));
+  cd.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openDetail(cd.dataset.char)}});
+});
+$('dtBack').addEventListener('click',e=>{e.stopPropagation();closeDetail()});
+
+/* 카드 초상에 대표 이미지 자동 반영 */
+Object.entries(CHAR_IMG).forEach(([k,v])=>{
+  if(!v.main)return;
+  const p=document.querySelector('#c-'+k+' .portrait');
+  if(p)p.innerHTML='<img src="'+v.main+'" alt="">';
+});
 </script>
 </body>
 </html>
