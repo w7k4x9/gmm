@@ -88,8 +88,8 @@ body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
 /* ── 미연시(VN) ── */
 #vn{z-index:26;justify-content:flex-end;user-select:none}
 #vnStage{position:absolute;inset:0;overflow:hidden}
-#vnSil{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(28px);height:min(94vh,960px);width:auto;max-width:none;opacity:0;transition:opacity 2s ease,transform 2s ease;pointer-events:none;user-select:none;-webkit-user-drag:none}
-#vnSil.show{opacity:.9;transform:translateX(-50%) translateY(0)}
+#vnSil{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.04);opacity:0;transition:opacity 2s ease,transform 2s ease;pointer-events:none;user-select:none;-webkit-user-drag:none}
+#vnSil.show{opacity:.9;transform:scale(1)}
 #vnFlash{position:absolute;inset:0;background:#dcd6ca;opacity:0;pointer-events:none;transition:opacity .85s}
 #vnBox{position:relative;width:min(840px,92vw);margin:0 auto 6vh;z-index:5;background:linear-gradient(rgba(8,8,12,.86),rgba(8,8,12,.96));border:1px solid var(--line);border-radius:3px;padding:26px 34px 30px;box-shadow:0 18px 56px rgba(0,0,0,.6);transition:opacity .6s}
 #vnName{font-family:var(--serif);font-weight:700;font-size:15px;letter-spacing:.26em;min-height:22px;margin-bottom:12px}
@@ -222,7 +222,7 @@ body.hov #ring{width:40px;height:40px;border-color:rgba(236,231,218,.8)}
   .lb-replay{grid-column:1;justify-self:center}
   .moon{width:80px;height:80px}
   #vnBox{padding:20px 20px 26px}
-  #vnSil{height:auto;width:min(500px,96vw)}
+  #vnSil{width:100%;height:100%}
   .dt-grid{grid-template-columns:1fr}
   .dt-hero{position:static;order:-1;max-width:420px;margin:0 auto;width:100%}
   .dt-row{grid-template-columns:82px 1fr}
@@ -465,7 +465,7 @@ const BGM = {
 const CHAR_IMG = {
   wol : { main:"https://s2gye.uk/gmm/wol.png", gallery:["https://s2gye.uk/gmm/w_ngt_1.png","https://s2gye.uk/gmm/w_h_2.png","https://s2gye.uk/gmm/w_sky_4.png","https://s2gye.uk/gmm/w_true_5.png","https://s2gye.uk/gmm/w_h_9.png"]  },   // 예: main:"assets/img/wol.png", gallery:["assets/img/wol_1.png","assets/img/wol_2.png"]
   gye : { main:"https://s2gye.uk/gmm/gyoem.png", gallery:["https://s2gye.uk/gmm/g_ngt_1.png","https://s2gye.uk/gmm/g_h_2.png","https://s2gye.uk/gmm/g_sky_4.png","https://s2gye.uk/gmm/g_true_5.png","https://s2gye.uk/gmm/g_h_9.png"] },
-  rok : { main:"https://s2gye.uk/gmm/rok.png", gallery:["https://s2gye.uk/gmm/r_ngt_1.png","https://s2gye.uk/gmm/r_h_2.png","https://s2gye.uk/gmm/r_sky_4.png","https://s2gye.uk/gmm/r_true_5.png","https://s2gye.uk/gmm/r_h_9.png"]  }
+  rok : { main:"https://s2gye.uk/gmm/rok.png", gallery:["https://s2gye.uk/gmm/r_ngt_2.png","https://s2gye.uk/gmm/r_h_2.png","https://s2gye.uk/gmm/r_sky_4.png","https://s2gye.uk/gmm/r_ngt_4.png","https://s2gye.uk/gmm/r_h_9.png"]  }
 };
 
 /* 3) 프롤로그(미연시) 이미지 — 클릭(대사) 순서대로 위에서부터 한 장씩 나옵니다.
@@ -490,10 +490,10 @@ const VN_IMAGES = {
     "https://s2gye.uk/gmm/web_bar_1.png",
     "https://s2gye.uk/gmm/web_bar_1.png",
     "https://s2gye.uk/gmm/web_bar_1.png",
+    "https://s2gye.uk/gmm/web_bar_1.png",
     "https://s2gye.uk/gmm/web_bar_2.png",
   ],   // 심야 루트 (예: "", "", "https://s2gye.uk/gmm/gyoem.png", ...)
   free : [
-    "https://s2gye.uk/gmm/web_setting_1.png",
     "https://s2gye.uk/gmm/web_setting_1.png",
     "https://s2gye.uk/gmm/web_setting_1.png",
     "https://s2gye.uk/gmm/web_setting_1.png",
